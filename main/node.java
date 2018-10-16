@@ -24,7 +24,7 @@ public class node implements Serializable{
     	   super();
        }
 
-       public node deepClone()throws Exception{
+       /*public node deepClone()throws Exception{
     	   //将对象写入流中
            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
@@ -33,6 +33,6 @@ public class node implements Serializable{
            ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
            return (node)objectInputStream.readObject();
-     }
+     }*/
        
 }

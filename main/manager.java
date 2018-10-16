@@ -18,7 +18,7 @@ public class manager {
         	map1.step-=1;	
         }
        
-        void run(map map1) throws Exception {
+        void run(map map1) throws Exception  {
         	Scanner human = null;
         	
         	for(int i=0;i<9;i++) {
@@ -47,6 +47,9 @@ public class manager {
         	String position=new AI().nextposition(map1);
         	String []positions=position.split(",");
         	if(judge(map1)!=0)break;
+        	System.out.println(positions[0]);
+        	System.out.println(new Integer(positions[0]).intValue());
+        	System.out.println(new Integer(positions[1]).intValue());
             change(new Integer(positions[0]).intValue(), new Integer(positions[1]).intValue(), map1,1);
             map1.show(); 
             if(judge(map1)!=0)break;

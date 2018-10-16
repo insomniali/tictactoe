@@ -61,12 +61,30 @@ public class AI {
     	 
     	 String nextpos="";
     	
+    	 if(map1.step>2) {
     	 tree Tree=new tree(0);
     	 bulidtree(map1,3,Tree);
-    	 backtrack(Tree);
-    	 System.out.println(Tree.position);
+    	// print(Tree,1);
+    	 alphabeta(Tree);
     	 nextpos=Tree.position;
+    	 }
+    	 else {
+    		 int temp=8;
+    		 for(int i=0;i<3;i++) {
+    			for(int j=0;j<3;j++) {
+    				if(map1.MAP[i][j].reachable==true) {
+    					new manager().change(i+1, j+1, map1, 1);
+    					if(new AI().calculator(map1)<temp) {
+    						temp=new AI().calculator(map1);
+    						nextpos=new Integer(i+1).toString()+","+new Integer(j+1).toString();
+        				}
+    					new manager().dechange(i+1, j+1, map1);
+    				}
+    		 }
+    	 }
     	 
+    	
+    	 }
 		 return nextpos;
      }
      
@@ -87,8 +105,6 @@ public class AI {
         			    	  }
         			    	  tree node = new tree(0);
         			    	  int nodevalue=calculator(temp);
-        			    	  /*temp.show();
-        			    	  System.out.println(nodevalue);*/
         			    	  node.nodedata=nodevalue;
         			    	  node.position=new Integer(i+1).toString()+","+new Integer(j+1).toString();
         			    	  Tree.add(node);
@@ -109,53 +125,63 @@ public class AI {
 		}
      }
 
-    public void minvalue(tree Tree) {
-    	int min=100;
-    	for(tree i:Tree.childs) {
-    		if(i.nodedata<min) {
-    			min=i.nodedata;
-    			Tree.position=i.position;
-    		}
-    	}
-    	Tree.nodedata=min;
-    }
      
-    public void maxvalue(tree Tree) {
-    	int max=-100;
-    	for(tree i:Tree.childs) {
-    		if(i.nodedata>max) {
-    			max=i.nodedata;
-    			Tree.position=i.position;
+
+     public void alphabeta(tree Tree) {
+    	 int mindata=8;
+
+    	 for(tree j:Tree.childs) {
+    		
+    		for(tree i:j.childs) {
+    			
+    			for(tree k:i.childs) {
+    				if(k.nodedata<i.beta) {
+    					i.beta=k.nodedata;
+    					if(i.beta<j.alpha) {
+    						break;
+    					}
+    				}
+    				else {
+    					continue;
+    				}
+    			}
+    			
+    			i.nodedata=i.beta;
+    			if(i.nodedata>j.alpha) {
+    				j.alpha=i.nodedata;
+    				if(j.alpha>Tree.beta) {
+    					break;
+    				}
+    			}
+    			else {
+    				continue;
+    			}
+    			
     		}
-    	}
-    	Tree.nodedata=max;
-    }
-    
-    public void backtrack(tree Tree) {
-    	
-    	
-    	List<tree> treegroup1=new ArrayList<tree>();
-    	List<tree> treegroup2=new ArrayList<tree>();
-    	
-    	for(tree i:Tree.childs) {
-    		treegroup1.add(i);
-    	}
-    	
-    	for(int i=0;i<treegroup1.size();i++) {
-    		tree temp=treegroup1.get(i);
-    		for(tree j:temp.childs) {
-    			treegroup2.add(j);
+    		
+    		
+    		j.nodedata=j.alpha;
+
+    		if(j.nodedata<mindata) {
+    			mindata=j.nodedata;
+    			Tree.nodedata=j.nodedata;
+    			Tree.position=j.position;
     		}
+    		
     	}
     	
-    	for (tree k:treegroup2) {
-    		minvalue(k);
-    	}
     	
-    	for(tree m:treegroup2) {
-    		maxvalue(m);
-    	}
-    	
-    	minvalue(Tree);
     }
+
+     public void print(tree Tree,int depth) {
+    	 System.out.println(Tree.position+" "+Tree.nodedata+" "+depth);
+    	 if(Tree.childs.isEmpty()==false&&depth!=4) {
+    		 for(tree i:Tree.childs) {
+    			 print(i,depth+1);
+    		 }
+    	 }
+    	 else if(depth==4) {
+    		 return ;
+    	 }
+     }
 }
